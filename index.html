@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07162f">
+  <meta name="description" content="Trang giới thiệu bản thân với tình yêu dành cho bóng rổ.">
+  <title>My Basketball World — Giới thiệu bản thân</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #061329;
+      --panel: rgba(15, 37, 70, .78);
+      --panel-strong: #102b50;
+      --blue: #2589ff;
+      --cyan: #58e3ff;
+      --gold: #ffbd59;
+      --white: #f3f8ff;
+      --muted: #a8bdd8;
+      --line: rgba(135, 190, 255, .18);
+      --radius: 24px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, .30);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--white);
+      background:
+        radial-gradient(circle at 82% 4%, rgba(37,137,255,.22), transparent 28rem),
+        radial-gradient(circle at 0% 48%, rgba(88,227,255,.10), transparent 30rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .18;
+      background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .wrap { width: min(1140px, calc(100% - 40px)); margin-inline: auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(6,19,41,.76);
+      border-bottom: 1px solid rgba(135,190,255,.12);
+    }
+    .nav { min-height: 76px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+    .brand { display:flex; align-items:center; gap:11px; font-weight:900; letter-spacing:.08em; font-size:.88rem; }
+    .brand-mark {
+      display:grid; place-items:center; width:38px; height:38px; border-radius:13px;
+      color:#061329; font-size:1.2rem;
+      background:linear-gradient(135deg,var(--cyan),var(--blue));
+      box-shadow:0 0 26px rgba(37,137,255,.38);
+    }
+    .nav-links { display:flex; gap:26px; align-items:center; color:var(--muted); font-size:.91rem; }
+    .nav-links a { transition:color .2s ease; }
+    .nav-links a:hover { color:var(--cyan); }
+    .nav-cta, .button {
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border:1px solid rgba(88,227,255,.35); border-radius:999px;
+      padding:12px 19px; color:var(--white); font-weight:800; font-size:.9rem;
+      background:linear-gradient(115deg,rgba(37,137,255,.22),rgba(88,227,255,.08));
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .nav-cta:hover, .button:hover { transform:translateY(-3px); border-color:var(--cyan); box-shadow:0 10px 30px rgba(37,137,255,.2); }
+    .hero { min-height:690px; display:grid; grid-template-columns:1.05fr .95fr; align-items:center; gap:30px; padding:78px 0 90px; position:relative; }
+    .eyebrow { display:inline-flex; gap:9px; align-items:center; color:var(--cyan); font-size:.77rem; font-weight:900; letter-spacing:.18em; text-transform:uppercase; }
+    .pulse { width:8px; height:8px; background:var(--gold); border-radius:50%; box-shadow:0 0 0 0 rgba(255,189,89,.7); animation:pulse 1.9s infinite; }
+    h1 { margin:18px 0 18px; font-size:clamp(3.4rem,7.8vw,6.9rem); line-height:.92; letter-spacing:-.075em; max-width:720px; }
+    h1 span { color:transparent; background:linear-gradient(100deg,var(--cyan),#78aaff 48%,var(--gold)); background-clip:text; -webkit-background-clip:text; }
+    .hero-copy { max-width:570px; color:var(--muted); font-size:1.08rem; line-height:1.8; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:13px; margin-top:30px; }
+    .button.primary { background:linear-gradient(110deg,#1477f8,#29b4e8); border-color:transparent; box-shadow:0 12px 34px rgba(37,137,255,.24); }
+    .hero-tags { display:flex; gap:9px; flex-wrap:wrap; margin-top:34px; }
+    .tag { border:1px solid var(--line); color:#c4d7ef; border-radius:999px; padding:8px 12px; font-size:.78rem; background:rgba(14,39,73,.56); }
+    .visual { position:relative; min-height:490px; display:grid; place-items:center; perspective:1000px; }
+    .orbit {
+      position:absolute; width:min(440px,90vw); aspect-ratio:1; border:1px solid rgba(88,227,255,.22);
+      border-radius:50%; animation:spin 28s linear infinite;
+    }
+    .orbit::before,.orbit::after { content:""; position:absolute; border:1px dashed rgba(88,227,255,.18); border-radius:50%; inset:28px; }
+    .orbit::after { inset:65px; border-style:solid; border-color:rgba(255,189,89,.14); }
+    .orbit-dot { position:absolute; top:12%; left:15%; width:13px; height:13px; border-radius:50%; background:var(--gold); box-shadow:0 0 22px var(--gold); }
+    .hero-card {
+      position:relative; z-index:2; width:min(340px,78vw); aspect-ratio: .79;
+      padding:18px; overflow:hidden; border:1px solid rgba(144,203,255,.32);
+      border-radius:32px; background:linear-gradient(150deg,rgba(27,74,124,.9),rgba(7,24,49,.94));
+      box-shadow:var(--shadow); transform:rotateY(-9deg) rotateX(4deg);
+      animation:float 5.5s ease-in-out infinite;
+    }
+    .hero-card::before { content:""; position:absolute; width:220px; height:220px; border-radius:50%; background:rgba(37,137,255,.35); filter:blur(45px); top:15%; left:18%; }
+    .card-top { position:relative; display:flex; justify-content:space-between; align-items:center; color:#c1d8f4; font-size:.7rem; font-weight:900; letter-spacing:.15em; }
+    .jersey { position:relative; display:grid; place-items:center; height:290px; }
+    .jersey-number { font-size:10rem; line-height:1; font-weight:1000; letter-spacing:-.12em; color:rgba(255,255,255,.09); text-shadow:0 0 50px rgba(88,227,255,.13); }
+    .ball {
+      position:absolute; width:126px; aspect-ratio:1; border-radius:50%;
+      background:radial-gradient(circle at 30% 25%,#ffdb91,#ed8a31 58%,#a94715);
+      border:5px solid #6f3517; box-shadow:inset -12px -13px 0 rgba(90,37,12,.18),0 18px 40px rgba(0,0,0,.32);
+      animation:dribble 1.65s cubic-bezier(.45,.02,.62,.98) infinite;
+    }
+    .ball::before,.ball::after { content:""; position:absolute; inset:-2px 48%; background:#713817; border-radius:50%; }
+    .ball::after { inset:48% -2px; }
+    .ball-lines { position:absolute; inset:0; border:4px solid #713817; border-radius:50%; transform:rotate(38deg) scaleX(.5); }
+    .hero-card-foot { position:absolute; bottom:18px; left:20px; right:20px; display:flex; justify-content:space-between; align-items:end; }
+    .hero-card-foot strong { display:block; font-size:1.1rem; letter-spacing:.02em; }
+    .hero-card-foot small { color:var(--muted); }
+    .floating-label { position:absolute; z-index:3; padding:11px 14px; border:1px solid var(--line); background:rgba(7,24,49,.88); backdrop-filter:blur(12px); border-radius:15px; box-shadow:var(--shadow); font-size:.78rem; font-weight:800; animation:float 4.5s ease-in-out infinite; }
+    .label-one { top:12%; right:0; color:var(--gold); }
+    .label-two { bottom:14%; left:-1%; color:var(--cyan); animation-delay:-1.7s; }
+    .section { padding:82px 0; }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:25px; margin-bottom:30px; }
+    .section-kicker { color:var(--cyan); font-weight:900; letter-spacing:.18em; font-size:.75rem; text-transform:uppercase; }
+    h2 { font-size:clamp(2rem,4.5vw,3.5rem); margin:10px 0 0; letter-spacing:-.055em; line-height:1.04; }
+    .section-intro { max-width:480px; color:var(--muted); line-height:1.7; margin:0; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:17px; }
+    .info-card,.player-card,.quote-card {
+      border:1px solid var(--line); border-radius:var(--radius);
+      background:linear-gradient(145deg,rgba(18,47,85,.82),rgba(9,27,53,.82));
+      box-shadow:0 15px 50px rgba(0,0,0,.12);
+    }
+    .info-card { min-height:195px; padding:25px; position:relative; overflow:hidden; transition:transform .28s ease,border-color .28s ease; }
+    .info-card:hover { transform:translateY(-7px); border-color:rgba(88,227,255,.48); }
+    .info-card::after { content:""; position:absolute; width:130px; height:130px; border-radius:50%; right:-60px; bottom:-65px; background:rgba(37,137,255,.13); }
+    .icon-box { width:45px; height:45px; display:grid; place-items:center; border-radius:14px; background:rgba(37,137,255,.17); color:var(--cyan); font-size:1.35rem; }
+    .info-card small { display:block; margin-top:20px; color:var(--muted); font-size:.8rem; }
+    .info-card strong { display:block; margin-top:5px; font-size:1.45rem; }
+    .info-card p { margin:8px 0 0; color:var(--muted); font-size:.85rem; line-height:1.55; }
+    .player-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+    .player-card { overflow:hidden; position:relative; transform-style:preserve-3d; transition:transform .25s ease,border-color .25s ease; }
+    .player-image { height:265px; position:relative; overflow:hidden; background:linear-gradient(140deg,#1b5791,#071a34); }
+    .player-image img { display:block; width:100%; height:100%; object-fit:cover; object-position:center 23%; filter:saturate(.9); transition:transform .6s cubic-bezier(.2,.8,.2,1),filter .6s ease; }
+    .player-card:hover .player-image img { transform:scale(1.08); filter:saturate(1.15); }
+    .player-image::after { content:""; position:absolute; inset:45% 0 0; background:linear-gradient(transparent,rgba(6,19,41,.8)); }
+    .player-content { padding:20px 21px 22px; }
+    .player-role { color:var(--cyan); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase; font-weight:900; }
+    .player-content h3 { margin:8px 0; font-size:1.45rem; }
+    .player-content p { margin:0; color:var(--muted); font-size:.9rem; line-height:1.65; }
+    .number { position:absolute; z-index:2; top:14px; left:15px; border:1px solid rgba(255,255,255,.3); background:rgba(4,16,34,.55); backdrop-filter:blur(8px); padding:7px 10px; border-radius:999px; font-size:.73rem; font-weight:900; }
+    .court-band {
+      position:relative; overflow:hidden; padding:48px; border:1px solid rgba(88,227,255,.22); border-radius:30px;
+      background:linear-gradient(110deg,rgba(15,69,119,.93),rgba(8,29,58,.95));
+    }
+    .court-band::before { content:""; position:absolute; width:420px; height:420px; border:1px solid rgba(255,255,255,.1); border-radius:50%; right:-110px; top:-180px; box-shadow:0 0 0 38px rgba(255,255,255,.025),0 0 0 76px rgba(255,255,255,.02); }
+    .court-content { position:relative; z-index:1; max-width:650px; }
+    .court-content h2 { max-width:580px; }
+    .court-content p { color:#c1d5ed; line-height:1.8; }
+    .chips { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+    .chips span { padding:10px 14px; border-radius:999px; background:rgba(5,19,41,.44); border:1px solid rgba(166,213,255,.2); font-size:.82rem; }
+    .quote-card { padding:30px; margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:25px; }
+    .quote-card blockquote { margin:0; max-width:720px; font-size:clamp(1.2rem,2.5vw,1.8rem); font-weight:800; line-height:1.45; letter-spacing:-.025em; }
+    .quote-mark { font-size:4rem; line-height:1; color:var(--gold); opacity:.85; }
+    footer { padding:30px 0 46px; border-top:1px solid rgba(135,190,255,.12); color:var(--muted); font-size:.82rem; }
+    .footer-inner { display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; }
+    .credits { margin-top:13px; color:#8099b8; font-size:.72rem; line-height:1.7; }
+    .credits a { text-decoration:underline; text-underline-offset:3px; }
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity .75s ease,transform .75s cubic-bezier(.2,.75,.2,1); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+    @keyframes pulse { 70% { box-shadow:0 0 0 10px rgba(255,189,89,0); } 100% { box-shadow:0 0 0 0 rgba(255,189,89,0); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes float { 0%,100% { translate:0 0; } 50% { translate:0 -13px; } }
+    @keyframes dribble { 0%,100% { transform:translateY(-26px) rotate(0); } 50% { transform:translateY(45px) rotate(180deg); } }
+    @media (max-width:850px) {
+      .hero { grid-template-columns:1fr; padding-top:60px; text-align:center; }
+      .hero-copy { margin-inline:auto; }
+      .hero-actions,.hero-tags { justify-content:center; }
+      .visual { min-height:440px; }
+      .section-head { display:block; }
+      .section-intro { margin-top:15px; }
+      .grid,.player-grid { grid-template-columns:1fr 1fr; }
+      .player-card:last-child { grid-column:1/-1; }
+    }
+    @media (max-width:600px) {
+      .wrap { width:min(100% - 28px,1140px); }
+      .nav { min-height:66px; }
+      .nav-links { display:none; }
+      .nav-cta { padding:10px 14px; font-size:.78rem; }
+      .hero { min-height:unset; padding:64px 0 54px; gap:10px; }
+      h1 { font-size:clamp(3.25rem,16vw,5rem); }
+      .hero-copy { font-size:.98rem; }
+      .visual { min-height:390px; }
+      .hero-card { width:min(300px,78vw); }
+      .jersey { height:245px; }
+      .jersey-number { font-size:8.5rem; }
+      .ball { width:105px; }
+      .label-one { right:-3px; top:8%; }
+      .label-two { left:-3px; bottom:8%; }
+      .section { padding:58px 0; }
+      .grid,.player-grid { grid-template-columns:1fr; }
+      .player-card:last-child { grid-column:auto; }
+      .player-image { height:300px; }
+      .court-band { padding:30px 23px; }
+      .quote-card { padding:23px; }
+      .quote-mark { display:none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+      .reveal { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#home" aria-label="Về đầu trang"><span class="brand-mark">🏀</span><span>MY BASKETBALL WORLD</span></a>
+      <nav class="nav-links" aria-label="Điều hướng chính">
+        <a href="#about">Về mình</a>
+        <a href="#players">Nguồn cảm hứng</a>
+        <a href="#passion">Đam mê</a>
+      </nav>
+      <a class="nav-cta" href="#about">Khám phá <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main>
+    <section class="wrap hero" id="home">
+      <div class="hero-text">
+        <div class="eyebrow"><span class="pulse"></span> WELCOME TO MY COURT</div>
+        <h1>PLAY<br><span>WITH HEART.</span></h1>
+        <p class="hero-copy">Xin chào! Đây là góc nhỏ giới thiệu về mình — một người yêu thể thao, thích khám phá những điều mới và đặc biệt có niềm đam mê với bóng rổ. Với mình, mỗi cú ném là một cơ hội để tiến bộ.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#about">Tìm hiểu về mình <span aria-hidden="true">→</span></a>
+          <a class="button" href="#players">My NBA inspirations</a>
+        </div>
+        <div class="hero-tags">
+          <span class="tag">🏀 Basketball lover</span>
+          <span class="tag">⚡ Keep improving</span>
+          <span class="tag">💙 Blue energy</span>
+        </div>
+      </div>
+
+      <div class="visual" aria-label="Minh họa quả bóng rổ chuyển động">
+        <div class="orbit"><span class="orbit-dot"></span></div>
+        <div class="floating-label label-one">🏆 NEVER STOP PLAYING</div>
+        <div class="floating-label label-two">DRIBBLE · SHOOT · REPEAT</div>
+        <div class="hero-card">
+          <div class="card-top"><span>PLAYER PROFILE</span><span>EST. 2011</span></div>
+          <div class="jersey">
+            <div class="jersey-number">01</div>
+            <div class="ball"><div class="ball-lines"></div></div>
+          </div>
+          <div class="hero-card-foot"><div><strong>THE NEXT PLAY</strong><small>One day better, every day.</small></div><span>✦ 01</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div><div class="section-kicker">A LITTLE ABOUT ME</div><h2>Thông tin cá nhân</h2></div>
+          <p class="section-intro">Một vài nét về mình, từ cung hoàng đạo đến hành trình học tập và sở thích ngoài sân bóng.</p>
+        </div>
+        <div class="grid">
+          <article class="info-card reveal">
+            <div class="icon-box">🎂</div>
+            <small>NGÀY SINH</small>
+            <strong>01 / 01</strong>
+            <p>Bắt đầu năm mới với thật nhiều mục tiêu và năng lượng tích cực.</p>
+          </article>
+          <article class="info-card reveal">
+            <div class="icon-box">♑</div>
+            <small>CUNG HOÀNG ĐẠO</small>
+            <strong>Ma Kết</strong>
+            <p>Kiên trì, có mục tiêu và luôn cố gắng từng bước để tốt hơn.</p>
+          </article>
+          <article class="info-card reveal">
+            <div class="icon-box">🎓</div>
+            <small>HỌC TẬP</small>
+            <strong>Trung học phổ thông</strong>
+            <p>Không ngừng học hỏi, cân bằng việc học và niềm đam mê thể thao.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="players">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div><div class="section-kicker">MY BASKETBALL INSPIRATIONS</div><h2>Những cầu thủ mình yêu thích</h2></div>
+          <p class="section-intro">Ba phong cách khác nhau, cùng một điểm chung: sự sáng tạo, kỹ năng và tinh thần thi đấu cuốn hút.</p>
+        </div>
+        <div class="player-grid">
+          <article class="player-card reveal">
+            <div class="player-image"><span class="number">#30 · SHOOTER</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Stephen_Curry_2.jpg?width=1000" alt="Stephen Curry thi đấu cho Golden State Warriors" loading="lazy"></div>
+            <div class="player-content"><div class="player-role">THE SHARPSHOOTER</div><h3>Stephen Curry</h3><p>Truyền cảm hứng bởi khả năng ném xa, sự tự tin và tinh thần luyện tập bền bỉ.</p></div>
+          </article>
+          <article class="player-card reveal">
+            <div class="player-image"><span class="number">#1 · PLAYMAKER</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/LaMelo_Ball.jpg?width=1000" alt="LaMelo Ball tại NBA All-Star Game" loading="lazy"></div>
+            <div class="player-content"><div class="player-role">THE CREATIVE PLAYMAKER</div><h3>LaMelo Ball</h3><p>Yêu thích nhãn quan chuyền bóng, lối chơi ngẫu hứng và khả năng tạo đột biến.</p></div>
+          </article>
+          <article class="player-card reveal">
+            <div class="player-image"><span class="number">#11 · BALL HANDLER</span><img src="https://commons.wikimedia.org/wiki/Special:FilePath/KyrieIrving.jpg?width=1000" alt="Kyrie Irving trong một trận đấu NBA" loading="lazy"></div>
+            <div class="player-content"><div class="player-role">THE HANDLE ARTIST</div><h3>Kyrie Irving</h3><p>Ngưỡng mộ kỹ thuật xử lý bóng, những pha crossover và khả năng dứt điểm đầy tinh tế.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="passion">
+      <div class="wrap">
+        <div class="court-band reveal">
+          <div class="court-content">
+            <div class="section-kicker">MORE THAN A GAME</div>
+            <h2>Bóng rổ không chỉ là một môn thể thao.</h2>
+            <p>Đó còn là tinh thần đồng đội, kỷ luật và sự kiên trì. Mình thích cảm giác dẫn bóng, tập ném, phối hợp cùng đồng đội và học thêm một kỹ năng mới sau mỗi buổi tập.</p>
+            <div class="chips">
+              <span>🏀 Dribbling</span><span>🎯 Shooting</span><span>🤝 Teamwork</span><span>🔥 Practice</span><span>💪 Discipline</span>
+            </div>
+          </div>
+        </div>
+        <div class="quote-card reveal">
+          <blockquote>“Great things come from hard work and perseverance.”<br><span style="color:var(--cyan);font-size:.9rem;font-weight:600;">Cứ kiên trì luyện tập — phiên bản tốt hơn của mình đang chờ phía trước.</span></blockquote>
+          <div class="quote-mark">✦</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-inner"><span>© <span id="year"></span> MY BASKETBALL WORLD</span><span>Made with 💙 and a love for basketball.</span><a href="#home">Back to top ↑</a></div>
+      <div class="credits">
+        Ảnh cầu thủ: Stephen Curry — Keith Allison / <a href="https://commons.wikimedia.org/wiki/File:Stephen_Curry_2.jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> (CC BY-SA 2.0); 
+        LaMelo Ball — Erik Drost / <a href="https://commons.wikimedia.org/wiki/File:LaMelo_Ball.jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> (CC BY 2.0); 
+        Kyrie Irving — Erik Drost / <a href="https://commons.wikimedia.org/wiki/File:KyrieIrving.jpg" target="_blank" rel="noopener noreferrer">Wikimedia Commons</a> (CC BY 2.0). Ảnh được dùng qua liên kết Wikimedia Commons.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+
+    // Subtle pointer tilt on desktop; the effect is disabled for touch and reduced-motion users.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduceMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      document.querySelectorAll(".player-card").forEach((card) => {
+        card.addEventListener("pointermove", (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = "perspective(900px) rotateY(" + (x * 5) + "deg) rotateX(" + (-y * 4) + "deg) translateY(-4px)";
+        });
+        card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+      });
+    }
+  </script>
+</body>
+</html>
